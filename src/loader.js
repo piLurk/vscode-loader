@@ -2,7 +2,7 @@
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-'use strict';
+"use strict";
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1793,18 +1793,18 @@ var AMDLoader;
 (function (AMDLoader) {
     const env = new AMDLoader.Environment();
     let moduleManager = null;
-    const DefineFunc = function (id, dependencies, callback) {
-        if (typeof id !== 'string') {
+    const DefineFunc = (function (id, dependencies, callback) {
+        if (typeof id !== "string") {
             callback = dependencies;
             dependencies = id;
             id = null;
         }
-        if (typeof dependencies !== 'object' || !Array.isArray(dependencies)) {
+        if (typeof dependencies !== "object" || !Array.isArray(dependencies)) {
             callback = dependencies;
             dependencies = null;
         }
         if (!dependencies) {
-            dependencies = ['require', 'exports', 'module'];
+            dependencies = ["require", "exports", "module"];
         }
         if (id) {
             moduleManager.defineModule(id, dependencies, callback, null, null);
@@ -1812,20 +1812,20 @@ var AMDLoader;
         else {
             moduleManager.enqueueDefineAnonymousModule(dependencies, callback);
         }
-    };
+    });
     DefineFunc.amd = {
-        jQuery: true
+        jQuery: true,
     };
     const _requireFunc_config = function (params, shouldOverwrite = false) {
         moduleManager.configure(params, shouldOverwrite);
     };
     const RequireFunc = function () {
         if (arguments.length === 1) {
-            if ((arguments[0] instanceof Object) && !Array.isArray(arguments[0])) {
+            if (arguments[0] instanceof Object && !Array.isArray(arguments[0])) {
                 _requireFunc_config(arguments[0]);
                 return;
             }
-            if (typeof arguments[0] === 'string') {
+            if (typeof arguments[0] === "string") {
                 return moduleManager.synchronousRequire(arguments[0]);
             }
         }
@@ -1835,7 +1835,7 @@ var AMDLoader;
                 return;
             }
         }
-        throw new Error('Unrecognized require call');
+        throw new Error("Unrecognized require call");
     };
     RequireFunc.config = _requireFunc_config;
     RequireFunc.getConfig = function () {
@@ -1852,9 +1852,11 @@ var AMDLoader;
     };
     RequireFunc.define = DefineFunc;
     function init() {
-        if (typeof AMDLoader.global.require !== 'undefined' || typeof require !== 'undefined') {
-            const _nodeRequire = (AMDLoader.global.require || require);
-            if (typeof _nodeRequire === 'function' && typeof _nodeRequire.resolve === 'function') {
+        if (typeof AMDLoader.global.require !== "undefined" ||
+            typeof require !== "undefined") {
+            const _nodeRequire = AMDLoader.global.require || require;
+            if (typeof _nodeRequire === "function" &&
+                typeof _nodeRequire.resolve === "function") {
                 // re-expose node's require function
                 const nodeRequire = AMDLoader.ensureRecordedNodeRequire(moduleManager.getRecorder(), _nodeRequire);
                 AMDLoader.global.nodeRequire = nodeRequire;
@@ -1862,21 +1864,25 @@ var AMDLoader;
                 RequireFunc.__$__nodeRequire = nodeRequire;
             }
         }
-        if (env.isNode && !env.isElectronRenderer && !env.isElectronNodeIntegrationWebWorker) {
+        if (env.isNode &&
+            !env.isElectronRenderer &&
+            !env.isElectronNodeIntegrationWebWorker) {
             module.exports = RequireFunc;
         }
         else {
             if (!env.isElectronRenderer) {
                 AMDLoader.global.define = DefineFunc;
+                AMDLoader.global.defineV2 = DefineFunc;
             }
             AMDLoader.global.require = RequireFunc;
         }
     }
     AMDLoader.init = init;
-    if (typeof AMDLoader.global.define !== 'function' || !AMDLoader.global.define.amd) {
+    if (typeof AMDLoader.global.define !== "function" || !AMDLoader.global.define.amd) {
         moduleManager = new AMDLoader.ModuleManager(env, AMDLoader.createScriptLoader(env), DefineFunc, RequireFunc, AMDLoader.Utilities.getHighPerformanceTimestamp());
         // The global variable require can configure the loader
-        if (typeof AMDLoader.global.require !== 'undefined' && typeof AMDLoader.global.require !== 'function') {
+        if (typeof AMDLoader.global.require !== "undefined" &&
+            typeof AMDLoader.global.require !== "function") {
             RequireFunc.config(AMDLoader.global.require);
         }
         // This define is for the local closure defined in node in the case that the loader is concatenated
@@ -1884,7 +1890,7 @@ var AMDLoader;
             return DefineFunc.apply(null, arguments);
         };
         define.amd = DefineFunc.amd;
-        if (typeof doNotInitLoader === 'undefined') {
+        if (typeof doNotInitLoader === "undefined") {
             init();
         }
     }
