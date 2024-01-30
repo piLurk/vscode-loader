@@ -135,7 +135,7 @@ function init(): void {
   }
 }
 
-export const initLoader = () => {
+const initLoader = () => {
   globalVar.setUniqueID = function (id: string) {
     this.__uniqueID__ = id;
   };
@@ -172,10 +172,7 @@ export const initLoader = () => {
   return globalVar;
 };
 
-export { globalVar };
 // 非 window 下，直接初始化。
 if (!isWindows()) {
   initLoader();
 }
-
-globalThis.aaa = globalVar.loader;
