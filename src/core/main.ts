@@ -128,6 +128,7 @@ function init(): void {
 
     // exports.loader = RequireFunc;
     globalVar.loader = RequireFunc;
+    globalVar.define = DefineFunc;
     // globalVar.require = RequireFunc;
   } else {
     if (!env.isElectronRenderer) {
