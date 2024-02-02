@@ -202,25 +202,23 @@ class BrowserScriptLoader implements IScriptLoader {
 
       let text: string | void = undefined;
 
-      if (this._canUseEval(moduleManager)) {
-        const uniqueID = globalVar.getUniqueID();
-        // use `fetch` if possible because `importScripts`
-        // is synchronous and can lead to deadlocks on Safari
-        text = await fetch(scriptSrc)
-          .then((response) => {
-            if (response.status !== 200) {
-              throw new Error(response.statusText);
-            }
-            return response.text();
-          })
-          .then((text) => {
-            return `(function(define) {\n${text}\n})(window["${uniqueID}"].define);\nwindow.__icubeResolveModule__({type:"__icube_module_loaded__", loaderID: "${uniqueID}", origin: "${scriptSrc}"  });\n//# sourceURL=${scriptSrc}`;
-          })
-          .catch((err) => {
-            throw err;
-          })
-          .then(undefined, errorback);
-      }
+      const uniqueID = globalVar.getUniqueID();
+      // use `fetch` if possible because `importScripts`
+      // is synchronous and can lead to deadlocks on Safari
+      text = await fetch(scriptSrc)
+        .then((response) => {
+          if (response.status !== 200) {
+            throw new Error(response.statusText);
+          }
+          return response.text();
+        })
+        .then((text) => {
+          return `(function(define) {${text}\n})(window["${uniqueID}"].define);\nwindow.__icubeResolveModule__({type:"__icube_module_loaded__", loaderID: "${uniqueID}", origin: "${scriptSrc}"  });\n//# sourceURL=${scriptSrc}`;
+        })
+        .catch((err) => {
+          throw err;
+        })
+        .then(undefined, errorback);
 
       let script = document.createElement("script");
       script.setAttribute("async", "async");

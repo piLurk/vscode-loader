@@ -18,7 +18,9 @@ import { Utilities } from "./utils";
 import { LoaderEvent } from "./loaderEvents";
 import { ensureRecordedNodeRequire, createScriptLoader } from "./scriptLoader";
 
+const isInWindows = isWindows();
 var define;
+
 const env = new Environment();
 
 let moduleManager: ModuleManager;
@@ -96,7 +98,7 @@ RequireFunc.define = DefineFunc;
 
 function init(): void {
   if (
-    typeof globalThis.require !== "undefined" ||
+    typeof globalVar.require !== "undefined" ||
     typeof __non_webpack_require__ !== "undefined"
   ) {
     // https://webpack.docschina.org/api/module-variables/#__non_webpack_require__-webpack-specific
@@ -136,12 +138,6 @@ function init(): void {
 }
 
 const initLoader = () => {
-  globalVar.setUniqueID = function (id: string) {
-    this.__uniqueID__ = id;
-  };
-  globalVar.getUniqueID = function () {
-    return this.__uniqueID__;
-  };
   if (typeof globalVar.define !== "function" || !globalVar.define.amd) {
     moduleManager = new ModuleManager(
       env,
@@ -169,10 +165,21 @@ const initLoader = () => {
       init();
     }
   }
+
+  if (isInWindows) {
+    globalVar.setUniqueID = function (id: string) {
+      this.__uniqueID__ = id;
+    };
+    globalVar.getUniqueID = function () {
+      return this.__uniqueID__;
+    };
+
+    globalThis.define = globalVar.define;
+  }
+
   return globalVar;
 };
 
-// 非 window 下，直接初始化。
-if (!isWindows()) {
-  initLoader();
-}
+initLoader();
+
+export const loader = globalVar;
