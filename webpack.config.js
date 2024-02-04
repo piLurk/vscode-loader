@@ -3,6 +3,8 @@ const path = require("path");
 const distPath = path.join(__dirname, "./src");
 // const distPath = "/Users/bytedance/icube-mono/lib/vscode/src/vs";
 
+// const distPath = "/Users/bytedance/framework-vscode/src/vs";
+
 const config = {
   mode: "development",
   entry: "./src/core/main.ts",

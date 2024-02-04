@@ -96,6 +96,13 @@ RequireFunc.getStats = function (): LoaderEvent[] {
 };
 RequireFunc.define = DefineFunc;
 
+let isSetGlobalDefine = false;
+RequireFunc.clearSideEffects = () => {
+  if (isSetGlobalDefine) {
+    globalThis.define = undefined;
+  }
+};
+
 function init(): void {
   if (
     typeof globalVar.require !== "undefined" ||
@@ -130,6 +137,7 @@ function init(): void {
     globalVar.loader = RequireFunc;
     if (globalVar.__need_loader_define__) {
       globalVar.define = DefineFunc;
+      isSetGlobalDefine = true;
     }
 
     // globalVar.require = RequireFunc;

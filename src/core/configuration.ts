@@ -88,6 +88,7 @@ export interface IRequireFunc {
   define(id: "string", callback: any): void;
   define(dependencies: string[], callback: any): void;
   define(callback: any): void;
+  clearSideEffects(): void;
 
   moduleManager?: ModuleManager;
 }
