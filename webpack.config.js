@@ -6,7 +6,7 @@ const distPath = path.join(__dirname, "./src");
 // const distPath = "/Users/bytedance/framework-vscode/src/vs";
 
 const config = {
-  mode: "development",
+  mode: "production",
   entry: "./src/core/main.ts",
   output: {
     filename: "loader.js",
