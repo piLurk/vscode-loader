@@ -224,20 +224,10 @@ class BrowserScriptLoader implements IScriptLoader {
       script.setAttribute("async", "async");
       script.setAttribute("type", "text/javascript");
 
-      // if (
-      //   scriptSrc ===
-      //   "http://localhost:9888/oss-dev/static/out/vs/workbench/workbench.web.main.js"
-      // ) {
-      //   debugger;
-      // }
-
-      if (!text) {
-        this.attachListeners(script, callback, errorback);
-      }
       let originScriptSrc = scriptSrc;
-      if (trustedTypesPolicy) {
-        scriptSrc = trustedTypesPolicy.createScriptURL(scriptSrc);
-      }
+      // if (trustedTypesPolicy) {
+      //   scriptSrc = trustedTypesPolicy.createScriptURL(scriptSrc);
+      // }
 
       if (text) {
         script.text = text;
@@ -252,8 +242,6 @@ class BrowserScriptLoader implements IScriptLoader {
             }
           }
         };
-      } else {
-        script.setAttribute("src", scriptSrc);
       }
 
       // Propagate CSP nonce to dynamically created script tag.

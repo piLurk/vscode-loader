@@ -1,6 +1,8 @@
 const path = require("path");
 
 const distPath = path.join(__dirname, "./src");
+// const distPath = "/Users/bytedance/icube-mono/lib/vscode/out-build/vs";
+
 // const distPath = "/Users/bytedance/icube-mono/lib/vscode/src/vs";
 
 // const distPath = "/Users/bytedance/framework-vscode/src/vs";
