@@ -3,20 +3,20 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-"use strict";
+'use strict';
 
 // Limitation: To load jquery through the loader, always require 'jquery' and add a path for it in the loader configuration
 
-import { Environment, globalVar, isWindows } from "./env";
+import { Environment, globalVar, isWindows } from './env';
 import {
   IDefineFunc,
   IRequireFunc,
   IConfigurationOptions,
-} from "./configuration";
-import { ModuleManager, IBuildModuleInfo } from "./moduleManager";
-import { Utilities } from "./utils";
-import { LoaderEvent } from "./loaderEvents";
-import { ensureRecordedNodeRequire, createScriptLoader } from "./scriptLoader";
+} from './configuration';
+import { ModuleManager, IBuildModuleInfo } from './moduleManager';
+import { Utilities } from './utils';
+import { LoaderEvent } from './loaderEvents';
+import { ensureRecordedNodeRequire, createScriptLoader } from './scriptLoader';
 
 const isInWindows = isWindows();
 var define;
@@ -27,17 +27,17 @@ let moduleManager: ModuleManager;
 
 const DefineFunc: IDefineFunc = <any>(
   function (id: any, dependencies: any, callback: any): void {
-    if (typeof id !== "string") {
+    if (typeof id !== 'string') {
       callback = dependencies;
       dependencies = id;
       id = null;
     }
-    if (typeof dependencies !== "object" || !Array.isArray(dependencies)) {
+    if (typeof dependencies !== 'object' || !Array.isArray(dependencies)) {
       callback = dependencies;
       dependencies = null;
     }
     if (!dependencies) {
-      dependencies = ["require", "exports", "module"];
+      dependencies = ['require', 'exports', 'module'];
     }
 
     if (id) {
@@ -63,7 +63,7 @@ const RequireFunc: IRequireFunc = <any>function () {
       _requireFunc_config(arguments[0]);
       return;
     }
-    if (typeof arguments[0] === "string") {
+    if (typeof arguments[0] === 'string') {
       return moduleManager.synchronousRequire(arguments[0]);
     }
   }
@@ -79,7 +79,7 @@ const RequireFunc: IRequireFunc = <any>function () {
       return;
     }
   }
-  throw new Error("Unrecognized require call");
+  throw new Error('Unrecognized require call');
 };
 RequireFunc.config = _requireFunc_config;
 RequireFunc.getConfig = function (): IConfigurationOptions {
@@ -105,15 +105,15 @@ RequireFunc.clearSideEffects = () => {
 
 function init(): void {
   if (
-    typeof globalVar.require !== "undefined" ||
-    typeof __non_webpack_require__ !== "undefined"
+    typeof globalVar.require !== 'undefined' ||
+    typeof __non_webpack_require__ !== 'undefined'
   ) {
     // https://webpack.docschina.org/api/module-variables/#__non_webpack_require__-webpack-specific
     // 避免 require 被 webpack 解析
     const _nodeRequire = globalVar.require || __non_webpack_require__; // webpack-ignore
     if (
-      typeof _nodeRequire === "function" &&
-      typeof _nodeRequire.resolve === "function"
+      typeof _nodeRequire === 'function' &&
+      typeof _nodeRequire.resolve === 'function'
     ) {
       // re-expose node's require function
       const nodeRequire = ensureRecordedNodeRequire(
@@ -150,7 +150,7 @@ function init(): void {
 }
 
 const initLoader = () => {
-  if (typeof globalVar.define !== "function" || !globalVar.define.amd) {
+  if (typeof globalVar.define !== 'function' || !globalVar.define.amd) {
     moduleManager = new ModuleManager(
       env,
       createScriptLoader(env),
@@ -161,8 +161,8 @@ const initLoader = () => {
 
     // The global variable require can configure the loader
     if (
-      typeof globalVar.require !== "undefined" &&
-      typeof globalVar.require !== "function"
+      typeof globalVar.require !== 'undefined' &&
+      typeof globalVar.require !== 'function'
     ) {
       RequireFunc.config(globalVar.require);
     }
@@ -173,7 +173,7 @@ const initLoader = () => {
     };
     define.amd = DefineFunc.amd;
 
-    if (typeof doNotInitLoader === "undefined") {
+    if (typeof doNotInitLoader === 'undefined') {
       init();
     }
   }
@@ -195,3 +195,4 @@ const initLoader = () => {
 initLoader();
 
 export const loader = globalVar;
+export default globalVar;
